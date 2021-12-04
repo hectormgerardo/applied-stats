@@ -1,0 +1,52 @@
+---
+title: "AE1UC1_2"
+author: "Equipo 3"
+date: "3/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Analisis de correlacion de las busquedas en google en mexico en los ultimos 12 meses
+
+Utilizando la herramienta *Google Trends* obtenemos las busquedas de criptomoneda y bitcoin para mexico
+
+https://trends.google.es/trends/explore?geo=MX&q=bitcoin,%2Fm%2F0vpj4_b
+
+## Importar datos
+```{r}
+setwd("~/Estadistica")
+library(readr)
+criptovsbitcoin <- read_csv("criptovsbitcoin.csv")
+View(criptovsbitcoin)
+```
+
+## Matriz de coeficientes de correlacion
+* Correlacion pearson
+
+**El coeficiente de correlación de Pearson es una prueba que mide la relación estadística entre dos variables continuas.** En este caso, aunque las graficas sean similares cuando nos vamos a los datos en bruto, podemos determinar que no hay una correlacion tan aparente teniendo como resultado aproximadamente un 59%.
+
+*Fuente:https://www.questionpro.com/blog/es/coeficiente-de-correlacion-de-pearson/*
+```{r}
+cor(criptovsbitcoin)
+```
+## Matriz de diagramas de dispersion
+**Las matrices de diagramas de dispersión son una buena forma de determinar si existen correlaciones lineales entre varias variables.** En este caso, podemos apreciar que aunque si se puede ver una notable correlacion no es tan fuerte ya que hay que tomar en cuenta que solo es un 59% segun los datos.
+
+
+**Fuente:https://www.ibm.com/docs/es/spss-modeler/18.2.1?topic=types-scatter-plot-matrix-charts**
+```{r}
+pairs(criptovsbitcoin)
+```
+
+## Conclusion personal de cada integrante.
+
+*Julio Valenzuela: En lo personal, analizando los datos de la forma en que lo hicimos en el ejemplo y en el ejercicio en equipo creo que comprendi un poco mejor las correlaciones entre posibles datos o en este caso terminos de busqueda.* 
+
+*Nadia Soto: En la asignación entendimos un poco sobre los que es la matriz de diagrama de dispersión, ya que a lo que comprendí esta se usa para mostrar como se relacionan dos variables, en este caso nosotros utilizamos los datos de bitcoin y de las criptomonedas en los últimos doce meses  y nos dimos cuenta de como es que se relacionan estas dos en términos de búsquedas de google.* 
+
+*Arturo Luna: En conclusión personal, como se puede observar en la anterior tabla y los datos que tenemos registrados, se tiene una correlación del 59%, y que por parte de la matriz de diagrama de dispersión se observa que en cierto tiempo los pequeños puntos se encimaron, pero la mayor parte del tiempo no, esto hace referencia a que no es una fuerte correlación.*
+
+*Rafael Soqui: Gracias al desarrollo de esta actividad logré junto con mi equipo comprender a un nivel mas alto sobre el tema visto y las correlaciones posibles entre dos variables como lo es en  este caso que utilizamos criptomonedas y bitcoin los cuales representamos mediante graficos y tablas que nos ayudaron a comprender mejor la correlacion en las busquedas. *
