@@ -1,0 +1,148 @@
+---
+title: "AI8UC1_10"
+author: "Jose Nunez"
+date: "10/8/2021"
+output: 
+  prettydoc::html_pretty:
+    theme: tactile
+    toc: true
+    toc_depth: 5
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **ANALISIS DE SERIES DE TIEMPO** 
+
+Para este ejercicio usaremos datos de Busqueda de Calabaza en mexico del año 2004 a 2021
+
+
+
+Datos usados en este ejercicio
+```{r}
+xfun::embed_file(path = "docs/Busqueda_Calabaza.csv")
+
+```
+
+
+```{r}
+library(readr)
+calabaza <- read_csv("docs/Busqueda_Calabaza.csv")
+
+```
+
+Tenemos un vector numerico llamado "Calabaza"
+
+Grafiquemos los datos 
+
+```{r}
+plot(calabaza)
+```
+
+Ahora transformaremos este vector numerico a un objeto de serie de tiempo
+
+
+```{r}
+calabaza.ts <- ts(calabaza , start = c(2004,1), frequency = 12)
+```
+
+Datos: Calabaza
+Empieza la serie de tiempo (start): 2004
+Cada año se compone de un ciclo de 12 meses: frequency = 12
+
+Ahora vemos los datos que ya son una serie de tiempo
+```{r}
+print(calabaza.ts)
+```
+Ahora grafiquemos con respecto al tiempo
+
+```{r}
+plot(calabaza.ts, bg="blue", pch = 21, col="red", cex=0.7, xlab="anios",ylab="Busqueda")
+```
+
+Ahora para hacer una comparacion entre los meses de cada año 
+todos los eneros por ejemplo seran una poblacion buscando comida
+
+esto lo haremos a traves de un grafico de caja y bigote
+
+```{r}
+boxplot(calabaza.ts ~ cycle(calabaza.ts), bg="red", pch = 21, col="blue", cex=1, xlab="Meses",ylab="Busquedas")
+```
+
+# **DECOMPOSICION DE SERIES DE TIEMPO**
+
+En este modelo, la serie observada es el resultado de sumar una tendencia que representa el comportamiento a largo plazo de la serie, un efecto estacional que describe sus fluctuaciones periódicas y un componente residual que describe las variaciones a corto plazo, normalmente impredecibles.
+
+Con R es muy sencillo obtener una descomposición estructural de este tipo. Se usa el comando decompose:
+
+
+
+$$
+serie observada = Tendencia + efecto estacional + residuos 
+$$
+
+```{r}
+calabaza.ts.desc <- decompose(calabaza.ts)
+plot(calabaza.ts.desc, xlab="year", col="red" )
+```
+
+
+Esta descomposición se basa en métodos elementales: 
+
+* la tendencia se calcula con una media móvil,
+
+* el efecto estacional se calcula promediando los valores de cada unidad de tiempo para todos los periodos (por ejemplo, todos los meses de enero si la serie es mensual) y luego centrando el resultado. Finalmente,
+
+* los residuos se obtienen restando a la serie observada las dos componentes anteriores. 
+
+La descomposicion solo es totalmente adecuada si se dispone de un número completo de periodos (por ejemplo, un múltiplo de 12 si la serie es mensual).
+
+
+
+
+## TRANSFORMACIONES BASICAS DE UNA SERIE
+En el gráfico de calabaza.ts se observa que la serie es estacionaria. Su tendencia es incremental apartir del 2010 volviendose mas fuerta la tendencia. Esto es debido a la relacion que tiene Halloween con las Calabazas, es utilizada como adorno para esas fechas en Octubre creando la consistenacia de busqueda en ese Mes, tal y como se observa al Grafico de Caja Bigote.
+
+**Estabilización de la varianza**: Para estabilizar la variabilidad se suelen tomar logaritmos. Esta transformación funcionará bien cuando la variabilidad sea aproximadamente proporcional al nivel de la serie. Representamos la serie transformada mediante
+
+```{r}
+plot(log(calabaza.ts), col ="red")
+```
+
+Eliminacion de la tendencia: Una forma sencilla de eliminar una tendencia aproximadamente lineal es diferenciar la serie, es decir, considerar la serie de diferencias entre una observación y la anterior en lugar de la serie original. Si xt
+ es una serie contenida en x, para calcular:
+ 
+$$
+\nabla x_t = x_t -x_{t-1}
+$$
+
+```{r}
+x <- log(calabaza.ts)
+dif1.x <- diff(x)
+plot(dif1.x,col="red", type="o", cex=0.6, bg="black",pch=21)
+```
+
+Eliminación de estacionalidad: Para eliminar la estacionalidad de una serie mensual se pueden tomar diferencias estacionales de orden 12. Si xt
+ es la serie que queremos desestacionalizar, se trata de calcular:
+ 
+$$
+\nabla_{12} x_t = x_t - x_{t-12}
+$$
+
+```{r}
+dif12.dif1.x <- diff(dif1.x, lag=12)
+plot(dif12.dif1.x)
+```
+
+
+```{r}
+y = dif12.dif1.x
+
+
+
+y <-y[-c(1,2,3,4,5,6),] ## Se eliminan del arreglo los datos con resultado INF, NAN, -INF 
+
+acf(y, main="Auto Correlacion y Covarianza")
+```
