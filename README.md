@@ -17,6 +17,9 @@ para ver los últimos cambios
 `git stash`
 congelar cambios. 
 ---
+`git stash pop`
+descongelar cambios
+---
 `git fetch`
 descarga lista de cambios.
 ---
@@ -31,3 +34,18 @@ cambia de rama de desarrollo.
 ---
 `git branch`
 enlista las ramas disponibles
+---
+`git rebase [tag ó número de commit]`
+cambiamos el punto de partida o nos devolvemos a una versión anterior
+
+UNIÓN DE DOS RAMAS:
+`git checkout [rama principal]` a la rama principal
+`git pull origin [nombre de la rama]`
+- se tiene que escribir sobre los cambios (commit)
+`git push`
+
+SIMPLE CAMBIO:
+`git add .`
+`git commit -m "mensaje"`
+`git push`
+
